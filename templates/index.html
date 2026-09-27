@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Order Management System</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <header class="topbar">
+
+        <div>
+            <h1>Order Management System</h1>
+
+            <p>
+                Welcome, <strong>{{ username }}</strong>
+                <span class="role-badge">
+                    {{ role|upper }}
+                </span>
+            </p>
+        </div>
+
+        <a href="/logout" class="logout-btn">
+            Logout
+        </a>
+
+    </header>
+
+
+    <!-- =========================
+         1. CUSTOMER & ORDER TYPE
+    ========================== -->
+
+    <section class="card">
+
+        <h2>1. Customer & Order Type</h2>
+
+        <div class="form-grid">
+
+            <!-- Customer Name -->
+
+            <div>
+                <label for="name">
+                    Customer Name
+                </label>
+
+                <input
+                    id="name"
+                    type="text"
+                    placeholder="Enter customer name"
+                    autocomplete="off"
+                >
+            </div>
+
+
+            <!-- Phone — OWNER ONLY -->
+
+            {% if role == "owner" %}
+
+            <div>
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    id="phone"
+                    type="tel"
+                    inputmode="numeric"
+                    maxlength="10"
+                    placeholder="10 digit phone number"
+                    autocomplete="off"
+                >
+            </div>
+
+            {% endif %}
+
+
+            <!-- Order Type -->
+
+            <div>
+
+                <label for="orderType">
+                    Order Type
+                </label>
+
+                <select id="orderType">
+
+                    <option value="">
+                        Select Order Type
+                    </option>
+
+                    <option value="Dine-In">
+                        Dine-In
+                    </option>
+
+                    <option value="Delivery">
+                        Delivery
+                    </option>
+
+                    <option value="Packing">
+                        Packing
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- Table Number -->
+
+            <div
+                id="tableBox"
+                style="display: none;"
+            >
+
+                <label for="tableNumber">
+                    Table Number
+                </label>
+
+                <input
+                    id="tableNumber"
+                    type="number"
+                    min="1"
+                    placeholder="Enter table number"
+                >
+
+            </div>
+
+
+            <!-- Address — OWNER ONLY -->
+
+            {% if role == "owner" %}
+
+            <div
+                id="addressBox"
+                style="display: none;"
+            >
+
+                <label for="address">
+                    Customer Address
+                </label>
+
+                <input
+                    id="address"
+                    type="text"
+                    placeholder="Enter customer address"
+                    autocomplete="off"
+                >
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <small
+            class="error"
+            id="customerError"
+        ></small>
+
+    </section>
+
+
+
+    <!-- =========================
+         2. ITEMS
+    ========================== -->
+
+    <section class="card">
+
+        <h2>2. Items</h2>
+
+        <div id="itemsBox"></div>
+
+
+        <button
+            type="button"
+            class="secondary"
+            id="addItem"
+        >
+            + Add Item
+        </button>
+
+
+        <div class="total-box">
+
+            <strong>
+                Total: ₹<span id="totalAmount">0.00</span>
+            </strong>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================
+         3. COMPLETE ORDER
+    ========================== -->
+
+    <section class="card">
+
+        <h2>3. Complete Order</h2>
+
+        <small
+            class="error"
+            id="orderError"
+        ></small>
+
+
+        <button
+            type="button"
+            class="primary"
+            id="completeOrder"
+        >
+            Complete Order
+        </button>
+
+    </section>
+
+
+
+    <!-- ==================================================
+         4. OWNER ONLY — PURCHASE HISTORY
+         THIS IS INTENTIONALLY AT THE VERY BOTTOM
+    =================================================== -->
+
+    {% if role == "owner" %}
+
+    <section class="card">
+
+        <h2>
+            4. Owner Only — Purchase History
+        </h2>
+
+
+        <p class="privacy-note">
+            🔒 Phone numbers and addresses are visible only to the owner.
+        </p>
+
+
+        <div class="search-row">
+
+            <div>
+
+                <label for="searchDate">
+                    Select Date
+                </label>
+
+                <input
+                    id="searchDate"
+                    type="date"
+                >
+
+            </div>
+
+
+            <button
+                type="button"
+                class="primary"
+                id="searchByDate"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <small
+            class="error"
+            id="searchError"
+        ></small>
+
+
+        <div id="customerResult"></div>
+
+    </section>
+
+    {% endif %}
+
+
+
+</div>
+
+
+<!-- =========================
+     ROLE FOR JAVASCRIPT
+========================= -->
+
+<script>
+
+    const CURRENT_ROLE = {{ role|tojson }};
+
+</script>
+
+
+<!-- =========================
+     JAVASCRIPT
+========================= -->
+
+<script
+    src="{{ url_for('static', filename='script.js') }}">
+</script>
+
+
+</body>
+</html>
